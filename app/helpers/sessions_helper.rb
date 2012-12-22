@@ -5,6 +5,7 @@ module SessionsHelper
   	end
 
   	def sign_out
+      cookies.delete(:nickname)
   		@current_user = nil
   	end
 
@@ -18,6 +19,6 @@ module SessionsHelper
 
 
 	def signed_in?
-		!@current_user.nil?
+		!(@current_user.nil?)
 	end
 end

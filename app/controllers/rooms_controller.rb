@@ -22,7 +22,7 @@ class RoomsController < ApplicationController
     @rooms = Array.new(keys.length)
     len = keys.length - 1
     for i in 0..len
-      @rooms[i] = r[keys[i]]
+      @rooms[i] = JSON.parse(r[keys[i]])
     end
 
   end

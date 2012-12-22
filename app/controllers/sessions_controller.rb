@@ -1,14 +1,9 @@
 class SessionsController < ApplicationController
 
-	def login
-		if signed_in?
-			redirect_to rooms_path
-		else
-			redirect_to signin_path
-		end
-	end
-
 	def new
+		if signed_in?
+			redirect_to user_path(current_user)
+		end
 		#new 
 	end
 
@@ -20,7 +15,7 @@ class SessionsController < ApplicationController
 	    redirect_to user
 	  else
 	    # Create an error message and re-render the signin form.
-	    flash[:error] = 'Invalid email/password combination'
+	    flash[:error] = 'Invalid email or password'
       	redirect_to signin_path
 	  end
 	end

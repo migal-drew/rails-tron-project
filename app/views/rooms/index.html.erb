@@ -1,10 +1,21 @@
-<h1>Listing rooms</h1>
+<h1>Game rooms</h1>
 
-<p>Привет, <%= cookies[:nickname] %>
-<br><%= link_to "Выйти",  welcome_logout_path %> | 
+<p>Select playable room, <%= current_user.nickname %> </p>
 <%= link_to 'New Room', new_room_path %>
 
-<br>
-<% @rooms.each do |r| %>
-	<p><%= r.to_json %></p>
-<% end %>
+<table>
+	<tr>
+		<td>ID</td>
+		<td>Description</td>
+		<td>Playing / Max players</td>
+	</tr>
+</table>
+<table class="table table-hover">
+	<% @rooms.each do |r| %>
+		<tr>
+			<td><p><%= r["id"] %></p></td>
+			<td><%= r["description"] %></td>
+			<td><%= r["players"].length %> / <%= r["max"] %></td>
+		</tr>
+	<% end %>
+</table>

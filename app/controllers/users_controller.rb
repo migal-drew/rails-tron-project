@@ -24,11 +24,15 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.json
   def new
-    @user = User.new
+    if signed_in?
+      redirect_to user_path(current_user)
+    else
+      @user = User.new
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @user }
+      respond_to do |format|
+        format.html # new.html.erb
+        format.json { render json: @user }
+      end
     end
   end
 
@@ -47,7 +51,7 @@ class UsersController < ApplicationController
     @user.score = 0
 
     if @user.save
-      redirect_to @user, notice: 'You have been successfully signed up!.'
+      redirect_to @user, notice: 'You have been successfully signed up!'
     else
       render action: "new"
     end
