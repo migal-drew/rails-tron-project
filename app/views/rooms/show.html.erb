@@ -1,0 +1,15 @@
+<head>
+
+</head>
+<body>
+	<h1>Detailed info about room</h1>
+
+	<%= link_to 'Edit', edit_room_path() %> |
+	<%= link_to 'Back', rooms_path %>
+
+<%= link_to 'Destroy', room_path(@room), method: :delete %>
+
+<br> Current car is 
+
+<%= debug params %>	
+</body>

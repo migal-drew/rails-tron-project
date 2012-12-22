@@ -1,0 +1,10 @@
+<h1>Listing rooms</h1>
+
+<p>Привет, <%= cookies[:nickname] %>
+<br><%= link_to "Выйти",  welcome_logout_path %> | 
+<%= link_to 'New Room', new_room_path %>
+
+<br>
+<% @rooms.each do |r| %>
+	<p><%= r.to_json %></p>
+<% end %>

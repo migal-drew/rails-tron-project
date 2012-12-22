@@ -1,0 +1,20 @@
+For user (TABLE 0):
+  Key is USER_ID
+  Value is:
+    1. ROOM_ID - where user is.
+    2. STATE - may be READY or NOT_READY. May be something other.
+    3. BIKE_NUM - Bike number which control by user.
+    4. SCORE - it is current score in the room
+
+For room (TABLE 1):
+  Key is ROOM_ID
+  Value is:
+    1. MAP_ID - declaration of map.
+    2. ADMIN_ID - Admin's USER_ID. User which create room.
+
+For map declaration(TABLE 2):    
+  Key is MAP_ID
+  Value is:
+    1. WALLS - array of array of lines
+    2. INIT_POSITION - Position of bike and there color
+    3. PERIOD - Action period
