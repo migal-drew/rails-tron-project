@@ -18,3 +18,11 @@ For map declaration(TABLE 2):
     1. WALLS - array of array of lines
     2. INIT_POSITION - Position of bike and there color
     3. PERIOD - Action period
+
+MAP
+  MAP_ID
+  NAME
+  DESCRIPTION
+  COLORS
+  WALLS
+  '{ "map_id":"1", "name":"first_cool_map", "description":"Superome astounding map!!!", "init_positions":["1", "2", "3"], "colors":["red", "blue", "white"], "walls":["p1", "p2", "p3"]}'

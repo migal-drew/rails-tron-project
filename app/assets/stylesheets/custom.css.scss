@@ -59,6 +59,12 @@ p {
 
 /* header */
 
+.navbar {
+    opacity: 0.8; /* opacity [0-1] */
+    -moz-opacity: 0.8; /* opacity [0-1] */
+    -webkit-opacity: 0.8; /* opacity [0-1] */
+}
+
 #logo {
   float: left;
   margin-right: 10px;

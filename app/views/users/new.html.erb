@@ -13,15 +13,15 @@
 </div>
 
 <%= form_for(@user) do |f| %>
-	<p> Nickname: </br> <%= f.text_field :nickname %> </p>
-	<p> Email: </br> <%= f.text_field :email %> </p>
-	<p> Password: </br>
+	<p> Nickname </br> <%= f.text_field :nickname %> </p>
+	<p> Email </br> <%= f.text_field :email %> </p>
+	<p> Password </br>
 	 	<%= f.password_field :password %>
 	</p>
-	<p> Password Confirmation:</br> 
+	<p> Confirm password </br> 
 		<%= f.password_field :password_confirmation %>
 	</p>
-	<%= f.submit "Signup", class: "btn btn-custom btn-large" %>
+	<%= f.submit "Sign up", class: "btn btn-custom btn-large" %>
 <% end %>
 
 

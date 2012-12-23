@@ -1,7 +1,12 @@
+require 'Redis'
+
 module SessionsHelper
+
 	def sign_in(user)
     	cookies[:nickname] = user.nickname
     	self.current_user = user
+      db = Redis.new
+      
   	end
 
   	def sign_out
@@ -19,6 +24,6 @@ module SessionsHelper
 
 
 	def signed_in?
-		!(@current_user.nil?)
+		!(self.current_user.nil?)
 	end
 end

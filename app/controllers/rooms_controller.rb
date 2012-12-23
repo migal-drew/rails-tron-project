@@ -30,23 +30,30 @@ class RoomsController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
-    #render text: params[:id]
-    #r = Redis.new
-    #r.set(1, '{"firm": "Aidu", "model": "4343a"}')
-    #str = r.get(1)
-    #hash = JSON.parse(str)
-    #render text: hash
-
-    #@mycar = Car.new('BMW', '100500_KickAss')
-    #s = ActiveSupport::JSON.encode(mycar)
-
-    #c = from_json(s)
-    #render text: mycar.to_json()
+    room_id = params[:id]
+    db = Redis.new
+    db.select(1)
+    @room = db.get(room_id)
+    
+    render text: "#{@room.to_json}"
   end
 
   # GET /rooms/new
   # GET /rooms/new.json
   def new
+    db = Redis.new
+    db.select(2)
+    keys = db.keys
+    #@maps = Array.new(keys.length)
+    @maps = Array.new
+    len = keys.length - 1
+    for i in 0..len
+      map_hash = JSON.parse(db[keys[i]])
+      #@maps[i] = [map_hash["name"], map_hash["map_id"]]
+      @maps.push([map_hash["name"], map_hash["map_id"]])
+    end
+
+    #render 'new'
   end
 
   # GET /rooms/1/edit
@@ -56,7 +63,22 @@ class RoomsController < ApplicationController
   # POST /rooms
   # POST /rooms.json
   def create
-    # Redis put new  room
+    db = Redis.new
+    # Select ROOM table (1)
+    db.select(1)
+    room_id = db.keys.max.to_i + 1
+
+    room_ht = Hash.new {|h,k| h[k]=[]}
+    room_ht["room_id"] = room_id
+    room_ht["description"] = params[:description]
+    room_ht["max"] = params[:max]
+    room_ht["map_id"] = params[:map_id]
+    room_ht["players"] = []
+    room_ht["admin_id"] = current_user.id
+
+    db[room_id] = room_ht.to_json
+
+    redirect_to rooms_path
   end
 
   # PUT /rooms/1
