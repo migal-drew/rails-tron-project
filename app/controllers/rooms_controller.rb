@@ -33,9 +33,14 @@ class RoomsController < ApplicationController
     room_id = params[:id]
     db = Redis.new
     db.select(1)
-    @room = db.get(room_id)
-    
-    render text: "#{@room.to_json}"
+    @room_ht = JSON.parse(db.get(room_id))
+    pl_keys = @room_ht["players"]
+    @players = Array.new
+    db.select(0)
+    pl_keys.each do |pl|
+      @players.push(db.get(pl))
+    end
+    #render text: "#{@room.to_json}"
   end
 
   # GET /rooms/new
@@ -91,4 +96,15 @@ class RoomsController < ApplicationController
   def destroy
     render text: "Deleted room with " + params[:id] + " id number"
   end
+
+  def join
+    # TO DO finish method
+    db = Redis.new
+    player_ht = db.get(ID)
+    player_ht["room_id"] = ROOM_ID
+    player_ht["color"] = COLOR
+    player_ht["bike_num"] = BIKE_NUM
+    db["ID"] = player_ht.to_json
+  end
+
 end

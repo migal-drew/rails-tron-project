@@ -26,3 +26,5 @@ MAP
   COLORS
   WALLS
   '{ "map_id":"1", "name":"first_cool_map", "description":"Superome astounding map!!!", "init_positions":["1", "2", "3"], "colors":["red", "blue", "white"], "walls":["p1", "p2", "p3"]}'
+
+  '{"room_id":10,"description":"Testring","max":"15","map_id":"3","players":["8", "9", "10", "13"],"admin_id":8}'

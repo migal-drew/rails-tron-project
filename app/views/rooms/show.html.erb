@@ -1,15 +1,41 @@
 <head>
-
 </head>
 <body>
-	<h1>Detailed info about room</h1>
+	<h1>Game room # <%= @room_ht["room_id"] %></h1>
 
-	<%= link_to 'Edit', edit_room_path() %> |
-	<%= link_to 'Back', rooms_path %>
+	<!--<%= link_to 'Back', rooms_path %><br><br>-->
 
-<%= link_to 'Destroy', room_path(@room), method: :delete %>
+	<% if is_admin?(@room_ht) %>
+		<p>You're an admin</p>
+		<%= link_to 'Destroy', room_path(@room), method: :delete, :confirm => "Are you sure?" %>
+	<% else %>
+		<%= submit_tag 'Join', :controller => "", :action => "create", :method => "post", class: "btn btn-custom" %>
+	<% end %>
 
-<br> Current car is 
+	
+	<br><br>
+
+	<!--<%= @players.to_json %> -->
+	<table class="table table-striped">
+		<tr>
+			<td>Player's name</td>
+			<td>Color</td>
+			<td>Status</td>
+			<td>Bike's number</td>
+		</tr>
+		<% @players.each do |pl| %>
+			<% unless pl.nil? %>
+				<tr>
+					<% pl_ht = JSON.parse(pl) %>
+					<td><%= pl_ht["nickname"] %></td>
+					<td><%= pl_ht["color"] %></td>
+					<td><%= pl_ht["state"] %></td>
+					<td><%= pl_ht["bike_num"] %></td>
+				</tr>
+			<% end -%>
+		<% end %>
+	</table>
+
 
 <%= debug params %>	
 </body>
