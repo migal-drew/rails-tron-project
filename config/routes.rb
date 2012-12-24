@@ -5,9 +5,7 @@ Tron2d::Application.routes.draw do
   match '/signup',     to: 'users#new'
   match '/signin',     to: 'sessions#new'
   match '/signout',    to: 'sessions#destroy', via: :delete
-  #match '/rooms/new',  to: 'rooms#new'
-  resources :rooms, only: [:new, :show]
-  
+
   resources :rooms
 
   root :to => 'sessions#login'

@@ -1,16 +1,6 @@
 require "redis"
 require "json"
 
-class Room
-  attr_accessor :id, :users, :state, :num_of_users
-  #attr_reader :firm, :model
-
-  def initialize(f, m)
-    @users = f
-    @state = m
-  end
-end
-
 class RoomsController < ApplicationController
   # GET /rooms
   # GET /rooms.json
@@ -71,15 +61,15 @@ class RoomsController < ApplicationController
     db = Redis.new
     # Select ROOM table (1)
     db.select(1)
-    room_id = db.keys.max.to_i + 1
+    room_id = db.keys.map(&:to_i).max + 1
 
     room_ht = Hash.new {|h,k| h[k]=[]}
     room_ht["room_id"] = room_id
     room_ht["description"] = params[:description]
     room_ht["max"] = params[:max]
     room_ht["map_id"] = params[:map_id]
-    room_ht["players"] = []
-    room_ht["admin_id"] = current_user.id
+    room_ht["players"] = [current_user.id.to_s]
+    room_ht["admin_id"] = current_user.id.to_s
 
     db[room_id] = room_ht.to_json
 
@@ -89,6 +79,43 @@ class RoomsController < ApplicationController
   # PUT /rooms/1
   # PUT /rooms/1.json
   def update
+    cur_room_id = params[:id]
+    db = Redis.new
+
+    db.select(1)
+    r_ht = JSON.parse(db[cur_room_id])
+    players = r_ht["players"]
+
+    if params[:purpose] == "join"
+      # Fill room
+      db.select(1)
+      r_ht["players"] = players.push(current_user.id.to_s)
+      db[cur_room_id] = r_ht.to_json
+
+      # Fill users parameters with appropriate values
+      db.select(0)
+      player_ht = JSON.parse(db.get(current_user.id))
+      player_ht["room_id"] = cur_room_id
+      player_ht["color"] = "color"
+      player_ht["bike_num"] = "BIKE_NUM"
+      db[current_user.id] = player_ht.to_json
+    else
+      # Refresh player
+      db.select(0)
+      player_ht = JSON.parse(db.get(current_user.id))
+      player_ht["room_id"] = nil
+      player_ht["color"] = "NO color"
+      player_ht["bike_num"] = "NO bike"
+      db[current_user.id] = player_ht.to_json
+
+      # Refresh room
+      db.select(1)
+      players.delete(current_user.id.to_s)
+      r_ht["players"] = players
+      db[cur_room_id] = r_ht.to_json
+    end
+
+    redirect_to room_path(cur_room_id)
   end
 
   # DELETE /rooms/1
@@ -98,13 +125,7 @@ class RoomsController < ApplicationController
   end
 
   def join
-    # TO DO finish method
-    db = Redis.new
-    player_ht = db.get(ID)
-    player_ht["room_id"] = ROOM_ID
-    player_ht["color"] = COLOR
-    player_ht["bike_num"] = BIKE_NUM
-    db["ID"] = player_ht.to_json
+    
   end
 
 end

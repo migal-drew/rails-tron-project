@@ -37,6 +37,6 @@ module SessionsHelper
 	end
 
   def is_admin?(room_ht)
-    current_user.id == room_ht["admin_id"]
+    current_user.id.to_s == room_ht["admin_id"].to_s
   end
 end

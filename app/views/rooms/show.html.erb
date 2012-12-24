@@ -9,12 +9,26 @@
 		<p>You're an admin</p>
 		<%= link_to 'Destroy', room_path(@room), method: :delete, :confirm => "Are you sure?" %>
 	<% else %>
-		<%= submit_tag 'Join', :controller => "", :action => "create", :method => "post", class: "btn btn-custom" %>
+		<% unless @room_ht["players"].include? current_user.id.to_s %>
+			<% r_id = @room_ht["room_id"] %>
+			<%= form_tag( {:controller => :rooms, :action => :update,
+				:id => r_id}, {:method => :put} ) do %>
+				<%= hidden_field_tag :purpose, "join" %>
+				<%= submit_tag 'Join' %>
+			<% end %>
+		<% else %>
+			<% r_id = @room_ht["room_id"] %>
+			<%= form_tag( {:controller => :rooms, :action => :update,
+				:id => r_id}, {:method => :put} ) do %>
+				<%= hidden_field_tag :purpose, "unjoin" %>
+				<%= submit_tag 'Disconnect' %>
+			<% end %>
+		<% end %>
 	<% end %>
 
 	
 	<br><br>
-
+	<%= @room_ht["players"] %>
 	<!--<%= @players.to_json %> -->
 	<table class="table table-striped">
 		<tr>

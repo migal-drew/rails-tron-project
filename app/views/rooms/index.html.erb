@@ -17,7 +17,7 @@
 	<% @rooms.each do |r| %>
 		<tr>
 			<td><p><%= r["room_id"] %></p></td>
-			<td><%= r["description"] %></td>
+			<td><%= link_to r["description"], room_path(r["room_id"]) %></td>
 			<td><%= r["players"].length %> / <%= r["max"] %></td>
 			<td><%= r["map_id"] %></td>
 		</tr>
