@@ -1,4 +1,9 @@
+require 'bcrypt'
+
 class UsersController < ApplicationController
+
+  include BCrypt
+
   # GET /users
   # GET /users.json
   def index
@@ -38,20 +43,24 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @user = User.find(params[:id])
+    #@user = User.find(params[:id])
+    redirect_to current_user
   end
 
   # POST /users
   # POST /users.json
   def create
-    #render text:  params[:user]
     @user = User.new(params[:user])
+    #@user.nickname = params[:user][:nickname]
+    #@user.email = params[:user][:email]
+    #@user.password = params[:user][:password]
     @user.wins = 0
     @user.battles = 0
     @user.score = 0
 
     if @user.save
-      redirect_to @user, notice: 'You have been successfully signed up!'
+      redirect_to signin_path,
+        notice: 'You have been successfully signed up! Please sign in!'
     else
       render action: "new"
     end

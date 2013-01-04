@@ -9,8 +9,11 @@
         <span class="add-on"><i class="icon-envelope"></i></span>
         <%= f.text_field :email %>
       </div>
-      <%= f.label :password %>
-      <%= f.password_field :password %>
+      <div class="input-prepend">
+        <%= f.label :password %>
+        <span class="add-on"></span>
+        <%= f.password_field :password %>
+      </div>
       <br><br>
       <%= f.submit "Sign in", class: "btn btn-custom btn-large" %>
     <% end %>
@@ -26,8 +29,8 @@
       </td></tr>
       <tr><td>
         <blockquote class="pull-right">
-          <p>Вы не сможете оторваться от игры! 10/10</p>
-          <small>Игромания, игровой журнал №1 в России</small>
+          <p>.... 10/10</p>
+          <small>....</small>
         </blockquote> 
       </td></tr>
       
@@ -37,11 +40,6 @@
   
       
 </div>
-
-
-
-
-
 
 <br>
 

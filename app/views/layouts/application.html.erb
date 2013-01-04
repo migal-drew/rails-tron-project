@@ -8,6 +8,13 @@
     <%= render 'layouts/shim' %>    
   </head>
   <body>
+    <script scr="jquery.js">
+      $(document).ready(function() {
+        $('form').submit(function() {
+          $('input[type=submit]', this).attr('disabled', 'disabled');
+        });
+      });
+    </script>
     <%= render 'layouts/header' %>
     <div align='center'>
       <%= render 'layouts/messages' %>

@@ -6,6 +6,8 @@ Tron2d::Application.routes.draw do
   match '/signin',     to: 'sessions#new'
   match '/signout',    to: 'sessions#destroy', via: :delete
 
+  match '/play', to: 'sessions#play' 
+
   resources :rooms
 
   root :to => 'sessions#login'

@@ -1,19 +1,27 @@
 <h1>Game rooms</h1>
 
-<p>Select playable room, <%= current_user.nickname %> </p>
-<p>Signed? <%= signed_in? %></p>
+<script scr="jquery.js">
+	var showTime = function() {
+    	var now = new Date();
+    	document.getElementById('foobar').innerHTML =
+      	now.toDateString()+" "+now.toTimeString();
+    };
+	setInterval(showTime, 1000);
+</script>
+
+<div id="foobar"></div><br>
+
+<p>Select room, <%= current_user.nickname %> </p>
 <%= button_to 'New Room', new_room_path,
 	class: "btn btn-custom", :method => 'get' %>
 
-<table>
+<table class="table table-hover table table-condensed">
 	<tr>
 		<td>ID</td>
 		<td>Description</td>
 		<td>Playing / Max players</td>
 		<td>Map</td>
 	</tr>
-</table>
-<table class="table table-hover">
 	<% @rooms.each do |r| %>
 		<tr>
 			<td><p><%= r["room_id"] %></p></td>

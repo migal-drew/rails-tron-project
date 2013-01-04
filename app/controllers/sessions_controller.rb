@@ -25,4 +25,8 @@ class SessionsController < ApplicationController
 
 		redirect_to signin_path
 	end
+
+	def play
+		render 'play'
+	end
 end

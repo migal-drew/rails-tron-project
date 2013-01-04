@@ -15,13 +15,13 @@ ActiveRecord::Schema.define(:version => 20121216161124) do
 
   create_table "users", :force => true do |t|
     t.string   "email"
-    t.string   "password"
+    t.string   "hashed_password"
     t.string   "nickname"
     t.integer  "wins"
     t.integer  "battles"
     t.decimal  "score"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
 end
