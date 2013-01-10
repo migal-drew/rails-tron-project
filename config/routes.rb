@@ -10,7 +10,7 @@ Tron2d::Application.routes.draw do
 
   resources :rooms
 
-  root :to => 'sessions#login'
+  root :to => 'sessions#new'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
