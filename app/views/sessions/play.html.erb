@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+#mycanvas1{
+   border:1px solid red;
+}
+#mycanvas2{
+   border:1px solid blue;
+}
+</style>
+<script type="text/javascript">
+const WIDTH=600;
+const HEIGHT=500;
+const TD=1;
+
+window.USER_ID = <%= current_user.id %>;
+USER_ID = window.USER_ID;
+window.canvasName = "mycanvas1";
+window.game_time = 0;
+GAME_TIME = window.game_time;
+
+
+function parseGetParams() { 
+   var $_GET = {}; 
+   var __GET = window.location.search.substring(1).split("&"); 
+   for(var i=0; i<__GET.length; i++) { 
+      var getVar = __GET[i].split("="); 
+      $_GET[getVar[0]] = typeof(getVar[1])== undefined ? "" : getVar[1]; 
+   } 
+   return $_GET; 
+} 
+
+function sendUpdate(pos, dw)
+{
+  u = JSON.stringify({TYPE:"DATA", VALUE:{x:pos.x, y:pos.y, dw:dw}});
+  console.log(u);
+  window.socket.send(u);
+}
+
+function TBike(X, Y, W, C, CL) {
+this.data = 
+  {
+    cur:{x:X,y:Y},
+    w:W,
+    last_dw:0,
+    c:C,
+    cl:CL
+  }
+this.GameOver = false;
+//this.cur = new TPoint(x, y);
+//this.w = w;
+//this.last_dw = 0;
+this.mem = new Array();
+this.mem[0] = {x:X, y:Y};//new TPoint(x, y);
+this.mem[1] = this.data.cur;
+this.l = 0;
+//this.c = c;
+//this.cl = cl;
+
+this.turnLeft = turnLeft;
+this.turnRight = turnRight;
+this.move = move;
+this.turn = turn;
+  function move(f) {
+    MoveBike(this, f);
+  }
+  function turnLeft() {
+    turn(this, -1, true);
+  }
+  function turnRight() {
+    turn(this, 1, true);
+  }
+  function turn(b, dw, send) {
+  send = send || false
+  if (send)
+    sendUpdate(b.data.cur, dw);
+  b.data.last_dw = dw;
+  b.data.w = (b.data.w + 4 + dw) % 4;
+	b.data.cur = {x:b.data.cur.x, y:b.data.cur.y};//new TPoint(b.cur.x, b.cur.y);
+	b.mem[b.mem.length] = b.data.cur;
+	b.l = 0;
+  }
+    function MoveBike(b)
+	{
+      if (b.GameOver)
+        return false;
+	  var step_size=1;
+	  switch (b.data.w) {
+	  case 0 : b.data.cur.x = b.data.cur.x + step_size;
+		break;
+	  case 1 : b.data.cur.y = b.data.cur.y + step_size;
+		break;
+	  case 2 : b.data.cur.x = b.data.cur.x - step_size;
+		break;
+	  case 3 : b.data.cur.y = b.data.cur.y - step_size;
+		break;
+	  }
+	  return true;
+	}
+}
+
+function HandleReceive(msg){/*Only declare this function. Implementation below.*/};
+
+function createSocket() {
+  console.log("try find socket class");
+  var mySocketClass;
+  if ("MozWebSocket" in window)
+    mySocketClass = MozWebSocket
+  else if ("WebSocket" in window) 
+    mySocketClass = WebSocket;
+  else{
+    console.log("Can't find any socket class.");
+    alert("Can't find any socket class.");
+    return false;
+  }
+  host_name = "192.168.220.89";
+  port_num = 3000;
+  console.log("Web socket is supported. Try connect to " + host_name + " on port " + port_num + ".");
+  window.socket = new mySocketClass("ws://" + host_name + ":" + port_num);
+  window.socket.onmessage = function (evt)
+  {
+    var received_message = evt.data;
+    console.log("recive data from socket: '" + received_message + "'.");
+    HandleReceive(received_message);
+  };
+  window.socket.onopen = function()
+  {
+    console.log("Socket successfully create and now is open.");
+    socket.send(JSON.stringify({"TYPE":"CONNECT", "USER_ID":USER_ID}));
+  };
+  window.socket.onclose = function()
+  {
+    console.log("Socket is closed.");
+  };
+  window.socket.onerror = function()
+  {
+    console.log("Something wrong. Error in socket.");
+  };
+  return true;
+}
+
+
+var endGame = true;
+
+function Init(canv)
+{
+  window.bikes = new Array();
+//  b2 = new TBike(0.9*WIDTH, HEIGHT/2, 2, '1', '#1E90FF');
+//  b1 = new TBike(0.1*WIDTH, HEIGHT/2, 0, '1', 'rgb(255,0,0)');
+  for (var k = 0; k < canv.length; k++)
+  {
+	  var canvas = document.getElementById(canv[k]);
+	  canvas.width = WIDTH;
+	  canvas.height = HEIGHT;
+	  if (canvas.getContext){
+		var ctx = canvas.getContext('2d');
+		ctx.clearRect(0,0, canvas.width, canvas.height);
+		ctx.save();
+	  }
+  }
+  
+}
+
+function HandleReceive(msg)
+{
+  var m = new Object;
+  m = JSON.parse(msg);
+  console.log(msg);
+  console.log(m);
+  console.log(JSON.parse(msg));
+  if (m.TYPE == "DATA") {
+    v = m.VALUE;
+    b = window.bikes[m.SOURCE];
+    b.data.cur.x = v.x;
+    b.data.cur.y = v.y;
+    b.mem[b.mem.length-1].x = v.x;
+    b.mem[b.mem.length-1].y = v.y;
+    b.turn(b, v.dw);
+  } else if (m.TYPE == "INIT") {
+    console.log("init");
+    window.period = m.PERIOD;
+    console.log("Periodi is " + window.period);
+    window.bikes = new Array();
+    console.log(m.VALUE);
+    for (var i = 0; i < m.VALUE.length; i++)
+    {
+        window.bikes[m.VALUE[i].ID] = new TBike(m.VALUE[i].POSITION.x, m.VALUE[i].POSITION.y, m.VALUE[i].POSITION.w, i, m.VALUE[i].COLOR);
+    }
+    console.log("create bikes");
+    window.map = m.MAP;
+  } else if (m.TYPE == "START") {
+    if (m.VALUE == "NOW") {
+        console.log("start game");
+        endGame = false;
+        StartStopIteration();
+    } else {
+        var c=document.getElementById(window.canvasName);
+        var ctx=c.getContext("2d");
+        ctx.restore();
+        ctx.save();
+        ctx.clearRect(0,0, c.width, c.height);
+        ctx.font="30px Arial";
+        ctx.fillText("Start after "+m.VALUE,10,50);
+    }
+  } else if (m.TYPE == "GAME") {
+    b = window.bikes[m.SOURCE];
+    if (m.VALUE = "GAME_OVER") {
+        b.GameOver = true;
+        if (USER_ID == m.SOURCE) {
+            endGame = true;
+            StartStopIteration();
+        }
+    } else if (m.VALUE == "WIN") {
+        endGame = true;
+        StartStopIteration();
+        var c=document.getElementById(window.canvasName);
+        var ctx=c.getContext("2d");
+        ctx.restore();
+        ctx.save();
+        ctx.clearRect(0,0, c.width, c.height);
+        //ctx.strokeStyle("#00FF00");
+        ctx.font="30px Arial";
+        console.log("draw");
+        if (m.SOURCE==USER_ID)
+            ctx.fillText("YOU WIN!!!",10,50);
+        else
+            ctx.fillText("YOU LOUSE =(",10,50);
+    }
+  }
+  m = {};
+  msg = "";
+};
+
+function DrawField(ctx)
+{
+    M = window.map;
+	ctx.beginPath();
+	ctx.strokeStyle = '#000000';
+	ctx.lineWidth  = 3;
+    for (var n = 0; n < M.length; n++)
+    {
+        var map = M[n];
+        ctx.moveTo(map[map.length-1].x, map[map.length-1].y);
+        for (var i = 0; i < map.length; i++)
+        {
+            ctx.lineTo(map[i].x, map[i].y);
+        }
+    }
+	ctx.stroke();
+}
+
+function DrawBackground(ctx, cur, curW)
+{
+    x = cur.x;
+    y = cur.y;
+    w = ctx.canvas.width * 1.5;
+    h = ctx.canvas.height * 1.5;
+    ctx.fillStyle = '#202020';
+	ctx.fillRect(x-w/2, y-h/2, w, h);
+    
+    var step = 30;
+    d = (x + y)%step;
+    
+    ctx.lineWidth = 0.3;
+	ctx.strokeStyle = '#00FF00';
+    xl = x-w/2;
+    yl = y-h/2;
+    xl = xl - xl%step;
+    yl = yl - yl%step;
+	for (var i = 0; i < w/step; i++)
+	{
+	  ctx.beginPath();
+	  ctx.moveTo(xl + i*step, y-h/2);
+	  ctx.lineTo(xl + i*step, y+h/2);
+	  ctx.stroke();
+	}
+	for (var i = 0; i < h/step; i++)
+	{
+	  ctx.beginPath();
+	  
+	  ctx.moveTo(x-w/2,yl + i*step);
+	  ctx.lineTo(w+w/2,yl + i*step);
+	  ctx.stroke();
+	}
+}
+
+function Draw(canv, bs)
+{
+  b = bs[USER_ID];
+  var canvas = document.getElementById(canv);
+  if (canvas.getContext){
+    var ctx = canvas.getContext('2d');
+	var i, j;	
+	ctx.restore();
+	ctx.save();
+	ctx.clearRect(0,0, canvas.width, canvas.height);
+    
+	//расчёт угла для плавного поворота
+	//var l = b.cur.x - b.mem[b.mem.length - 2].x + b.cur.y - b.mem[b.mem.length - 2].y;
+	//l = (l >= 0)?l:-l;
+	b.l = b.l+1.5;
+	var l = b.l;
+	var q = 20;//3 + 100/T;
+	var s = b.data.last_dw
+	var da = (l>q)?0:s*(q-l)*(Math.PI/2/q);
+	//перенос на центр
+	
+	ctx.translate(-b.data.cur.x+canvas.width/2, -b.data.cur.y+canvas.height/2);
+	ctx.translate(b.data.cur.x, b.data.cur.y);
+	ctx.rotate((3-b.data.w) * Math.PI/2 + da);
+	ctx.translate(-b.data.cur.x, -b.data.cur.y);
+    //ctx.clearRect(0,0, canvas.width, canvas.height);
+	//ctx.fillStyle = '#202020';
+	//ctx.fillRect(0, 0, canvas.width, canvas.height);
+    DrawBackground(ctx, b.data.cur,  b.data.w);
+	DrawField(ctx);
+/*
+	ctx.beginPath();
+	ctx.strokeStyle=b.cl;
+	ctx.lineWidth = 2;
+	ctx.moveTo(b.mem[0].x, b.mem[0].y);
+	for (i = 1; i < b.mem.length; i++)
+	{
+	  ctx.lineTo(b.mem[i].x, b.mem[i].y);
+	}
+	ctx.stroke();*/
+	for (var j in bs)
+	{
+        if (bs.hasOwnProperty(j))
+        {
+            ctx.beginPath();
+            ctx.strokeStyle=bs[j].data.cl;
+            ctx.lineWidth = 2;
+            ctx.moveTo(bs[j].mem[0].x, bs[j].mem[0].y);
+            for (i = 1; i < bs[j].mem.length; i++)
+            {
+              ctx.lineTo(bs[j].mem[i].x, bs[j].mem[i].y);
+            }
+            ctx.stroke();
+        }
+	}
+	
+  }
+  else {
+    alert('Sorry');
+  }
+}
+
+function DrawAll()
+{
+  Draw(window.canvasName, window.bikes);//new Array(window.b[0], window.b[1]));
+  //Draw('mycanvas2', new Array(window.b[1], window.b[0]));
+}
+
+function Iteration()
+{
+    GAME_TIME = GAME_TIME + 1;
+    for (b in window.bikes)
+    {
+        if (window.bikes.hasOwnProperty(b))
+        {
+            if (!window.bikes[b].move());
+                //console.log("Player " + b + " is game over");
+        }
+    }
+    /*
+	if (!window.b[0].move(field))
+	{
+	  clearInterval(t);
+	  endGame = true;
+	  alert('Game over! Player2 Win');
+	}
+	if (!window.b[1].move(field))
+	{
+	  clearInterval(t);
+	  endGame = true;
+	  alert('Game over! Player1 Win');
+	}*/
+	
+}
+function Start()
+{
+  uid = parseGetParams()["user_id"];
+
+  <!--#!!!!!!!!!!!!!!!!!!!! -->
+  console.log(uid);
+  <!--#!!!!!!!!!!!!!!!!!!!! -->
+
+  window.USER_ID = (uid == undefined) ? window.USER_ID : uid;
+  console.log("Load page with user id = " + USER_ID);
+  Init(new Array(window.canvasName));//, 'mycanvas2'));
+  createSocket();
+}
+function Restart()
+{
+    window.socket.send(JSON.stringify({"TYPE":"ADMIN", "VALUE":"RESTART"}));
+}
+var t;
+
+function StartStopIteration()
+{
+    if(!endGame)
+	{
+        GAME_TIME = 0;
+		t=setInterval("Iteration();", window.period);
+		tD=setInterval("DrawAll();", TD);
+	}
+	else 
+	{
+		clearInterval(t);
+		clearInterval(tD);
+	}
+}
+
+function Input(event)
+{
+  var o = document.getElementById('pressed');
+  o.innerHTML = "Pressed code " + event.keyCode + "; char=" + event.keyChar + ";";
+  switch (event.keyCode)
+  {
+  case 13  : {Restart();} break;
+  case 32 :
+  case 27  : {
+	endGame = !endGame;
+    if (endGame)
+    {
+        window.socket.send(JSON.stringify({"TYPE":"ADMIN", "VALUE":"PAUSE"}));
+        console.log(window.bikes[USER_ID]);
+        StartStopIteration();
+    }
+    else
+    {
+        window.socket.send(JSON.stringify({"TYPE":"ADMIN", "VALUE":"PLAY"}));
+    }
+	
+  } break;
+  case 97: 
+  case 65:
+  case 37 : {window.bikes[USER_ID].turnLeft(); } break;
+  case 68:
+  case 100:
+  case 39 : {window.bikes[USER_ID].turnRight(); } break;
+  /*case 49:
+  case 36: {window.b[1].turnLeft(); } break;
+  case 51:
+  case 35: {window.b[1].turnRight();} break;*/
+  }
+}
+</script>
+</head>
+<body onload="Start();" onkeydown="Input(event);">
+   <table>
+   <td>
+   <tr>
+   <canvas id="mycanvas1" width="WIDTH" height="HEIGHT"></canvas>
+   </tr>
+<!--   <tr>  <==>  </tr>
+   <tr>
+   </tr>
+   <canvas id="mycanvas2" width="500" height="500"></canvas>
+   !-->
+   </td>
+   </table>
+   <div id="output">Output</div>
+   <div id="pressed">Pressed</div>
+</body>
+</html>
