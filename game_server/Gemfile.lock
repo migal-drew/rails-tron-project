@@ -1,0 +1,9 @@
+GEM
+  specs:
+    eventmachine (1.0.3-x86-mingw32)
+
+PLATFORMS
+  x86-mingw32
+
+DEPENDENCIES
+  eventmachine
