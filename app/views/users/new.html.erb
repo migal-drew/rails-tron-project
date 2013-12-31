@@ -13,7 +13,7 @@
 </div>
 
 <%= form_for(@user) do |f| %>
-	<p> Nickname </br> <%= f.text_field :nickname %> </p>
+	<p> Nickname </br> <%= f.text_field :nickname%> </p>
 	<p> Email </br> <%= f.text_field :email %> </p>
 	<p> Password </br>
 	 	<%= f.password_field :password %>
@@ -21,7 +21,7 @@
 	<p> Confirm password </br> 
 		<%= f.password_field :password_confirmation %>
 	</p>
-	<%= f.submit "Sign up", class: "btn btn-custom btn-large" %>
+	<%= f.submit "Sign up", class: "btn btn-default btn-lg" %>
 <% end %>
 
 

@@ -1,15 +1,22 @@
-<header class="navbar navbar-fixed-top navbar-default">
-  <div class="navbar">
-    <%= link_to "Awesome Tron 2D", '/signin', id: "logo" %>
-    <nav>
-      <ul class="nav navbar-right">
-        <%= link_to "Home",    current_user %>
-        <% if signed_in? %>
-          <%= link_to "Sign out", signout_path, :method => :delete %>
-        <% else %>
-          <%= link_to "Sign in", signin_path %>
-        <% end %>
+<header>
+
+  <div class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/signin">Awesome Tron 2D</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
       </ul>
-    </nav>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="./">Default</a></li>
+        <li><a href="../navbar-static-top/">Static top</a></li>
+        <li><a href="../navbar-fixed-top/">Fixed top</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
   </div>
+
 </header>
