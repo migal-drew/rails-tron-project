@@ -5,39 +5,18 @@
   <div class="span6">
     <%= form_for(:session, url: sessions_path) do |f| %>
       <%= f.label :email %>
-      <div class="input-prepend">
-        <span class="add-on"><i class="icon-envelope"></i></span>
-        <%= f.text_field :email %>
-      </div>
-      <div class="input-prepend">
-        <%= f.label :password %>
-        <span class="add-on"></span>
-        <%= f.password_field :password %>
-      </div>
+      <%= f.text_field :email %>
+      <br>
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+
       <br><br>
-      <%= f.submit "Sign in", class: "btn btn-custom btn-large" %>
+      <%= f.submit "Sign in", class: "btn btn-default btn-lg" %>
     <% end %>
+
+    <br><br>
     <p>New user? <%= link_to "Sign up now!", signup_path %></p>
   </div>
-  <div class="span6">
-    <table>
-      <tr><td>
-        <blockquote class="pull-right">
-          <p>Play with friends online!</p>
-        </blockquote>
-      </td></tr>
-      <tr><td>
-        <blockquote class="pull-right">
-          <p> Join the battle now!</p>
-          <small>Tron 2D</small>
-        </blockquote> 
-      </td></tr>
-      
-    </table>
-  </div>
-
-  
-      
 </div>
 
 <br>

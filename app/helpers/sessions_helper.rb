@@ -1,5 +1,3 @@
-require 'Redis'
-
 module SessionsHelper
 
 	def sign_in(user)

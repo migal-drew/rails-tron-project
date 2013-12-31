@@ -1,17 +1,15 @@
-<header class="navbar navbar-fixed-top navbar-inverse">
-  <div class="navbar-inner">
-    <div class="container">
-      <%= link_to "Awesome Tron 2D", '/signin', id: "logo" %>
-      <nav>
-        <ul class="nav pull-right">
-          <li><%= link_to "Home",    current_user %></li>
-          <% if signed_in? %>
-            <li><%= link_to "Sign out", signout_path, :method => :delete %></li>
-          <% else %>
-            <li><%= link_to "Sign in", signin_path %></li>
-          <% end %>
-        </ul>
-      </nav>
-    </div>
+<header class="navbar navbar-fixed-top navbar-default">
+  <div class="navbar">
+    <%= link_to "Awesome Tron 2D", '/signin', id: "logo" %>
+    <nav>
+      <ul class="nav navbar-right">
+        <%= link_to "Home",    current_user %>
+        <% if signed_in? %>
+          <%= link_to "Sign out", signout_path, :method => :delete %>
+        <% else %>
+          <%= link_to "Sign in", signin_path %>
+        <% end %>
+      </ul>
+    </nav>
   </div>
 </header>

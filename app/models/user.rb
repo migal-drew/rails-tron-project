@@ -17,13 +17,13 @@ class User < ActiveRecord::Base
 	before_save { |user| user.email = email.downcase }
 	before_save { |user| encrypt_password(user.password) }
 
-    def create_remember_token
-      self.remember_token = SecureRandom.urlsafe_base64
-    end
+  def create_remember_token
+    self.remember_token = SecureRandom.urlsafe_base64
+  end
 
-    def password
-    	@password ||= BCrypt::Password.new(hashed_password)
-	end
+  def password
+    @password ||= BCrypt::Password.new(hashed_password)
+  end
 
 	def encrypt_password(new_pass)
 		@password = BCrypt::Password.create(new_pass)
