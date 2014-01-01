@@ -12,7 +12,3 @@
  *= require_tree .
 */
 
-*= require style
-*= require bootstrap.min
-*= require bootstrap-responsive.min
-*= require_tree .
