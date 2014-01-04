@@ -149,7 +149,7 @@ class RoomsController < ApplicationController
 
 # --------------------------------------------------------------------
 def get_players_bikes_nums(players_ids)
-    db = Redis.new
+    db = $redis
     db.select(0)
     bikes = Array.new
     for i in 0..players_ids.length - 1
