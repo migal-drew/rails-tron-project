@@ -9,6 +9,16 @@
 	setInterval(showTime, 1000);
 </script>
 
+<script type="text/JavaScript">
+<!--
+  function timedRefresh(timeoutPeriod) {
+      setTimeout("location.reload(true);",timeoutPeriod);
+  }
+//   -->
+</script>
+
+<body onload="JavaScript:timedRefresh(5000);">
+
 <div id="foobar"></div><br>
 
 <p>Select room, <%= current_user.nickname %> </p>
