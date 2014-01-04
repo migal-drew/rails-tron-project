@@ -12,7 +12,8 @@
 	<p><%= label_tag(:map) %></p>
 	<%= select_tag(:map_id, options_for_select(@maps)) %>
 	<p>
-		<%= submit_tag 'Create', :controller => "action", :rooms => "create", :method => "post", class: "btn btn-custom" %>
+    <%= submit_tag 'Create', :controller => "action", :rooms => "create", :method => "post", class: "btn btn-default" %>
+    <br><br>
 	</p>
 <% end %>
 

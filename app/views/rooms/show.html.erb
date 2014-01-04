@@ -17,7 +17,8 @@
 			:id => r_id }, {:method => :put} ) do %>
 			<% unless @room_ht["players"].include? current_user.id %>
 				<%= hidden_field_tag :purpose, "join" %>
-				<%= submit_tag 'Join', class: "btn btn-custom" %>
+        <%= submit_tag 'Join', class: "btn btn-default" %>
+        <br><br>
 			<% else %>
 				<%= hidden_field_tag :purpose, "unjoin" %>
 				<%= submit_tag 'Disconnect', class: "btn btn-default" %>
