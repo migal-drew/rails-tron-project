@@ -3,7 +3,7 @@ module SessionsHelper
 	def sign_in(user)
     	cookies[:nickname] = user.nickname
     	self.current_user = user
-      db = Redis.new
+      db = $redis
       db.select(0)
       player_ht = Hash.new { |hash, key| hash[key] = [] }
       player_ht["id"] = user.id

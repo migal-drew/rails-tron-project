@@ -4,7 +4,7 @@ class RoomsController < ApplicationController
   # GET /rooms
   # GET /rooms.json
   def index
-    r = Redis.new
+    r = $redis
     r.select(1)
 
     keys = r.keys
@@ -20,7 +20,7 @@ class RoomsController < ApplicationController
   # GET /rooms/1.json
   def show
     room_id = params[:id]
-    db = Redis.new
+    db = $redis
     db.select(1)
     room = db.get(room_id)
     if !room.nil?
@@ -39,7 +39,7 @@ class RoomsController < ApplicationController
   # GET /rooms/new
   # GET /rooms/new.json
   def new
-    db = Redis.new
+    db = $redis
     db.select(2)
     keys = db.keys
     @maps = Array.new
@@ -61,7 +61,7 @@ class RoomsController < ApplicationController
   # POST /rooms.json
   def create
     if !params[:description].empty?
-      db = Redis.new
+      db = $redis
       # Select ROOM table (1)
       db.select(1)
       room_id = db.keys.max
@@ -97,7 +97,7 @@ class RoomsController < ApplicationController
   # PUT /rooms/1.json
   def update
     cur_room_id = params[:id]
-    db = Redis.new
+    db = $redis
 
     db.select(1)
     r_ht = JSON.parse(db.get(cur_room_id))
@@ -141,7 +141,7 @@ class RoomsController < ApplicationController
   # DELETE /rooms/1.json
   def destroy
     # Only admin can delete rooms!
-    db = Redis.new
+    db = $redis
     db.select(1)
     db.del(params[:id])
     redirect_to rooms_path

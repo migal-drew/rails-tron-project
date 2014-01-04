@@ -82,6 +82,7 @@ GEM
     rake (10.1.1)
     rdoc (3.12.2)
       json (~> 1.4)
+    redis (3.0.6)
     ref (1.0.5)
     sass (3.2.13)
     sass-rails (3.2.6)
@@ -117,6 +118,7 @@ DEPENDENCIES
   jquery-rails
   pg
   rails
+  redis
   sass-rails (>= 3.2)
   therubyracer
   uglifier (>= 1.0.3)

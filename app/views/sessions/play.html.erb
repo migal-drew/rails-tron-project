@@ -114,8 +114,8 @@ function createSocket() {
     alert("Can't find any socket class.");
     return false;
   }
-  host_name = "localhost";
-  port_num = 3001;
+  host_name = 'http://rocky-mesa-5725.herokuapp.com';
+  port_num = 3000;
   console.log("Web socket is supported. Try connect to " + host_name + " on port " + port_num + ".");
   window.socket = new mySocketClass("ws://" + host_name + ":" + port_num);
   window.socket.onmessage = function (evt)

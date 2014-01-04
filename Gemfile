@@ -4,6 +4,8 @@ gem 'rails'
 gem 'sass-rails', '>= 3.2' # sass-rails needs to be higher than 3.2
 gem 'bootstrap-sass', '~> 3.0.3.0'
 
+gem 'redis'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
