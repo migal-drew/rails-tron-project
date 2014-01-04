@@ -1,14 +1,5 @@
 <h1>Game rooms</h1>
 
-<script scr="jquery.js">
-	var showTime = function() {
-    	var now = new Date();
-    	document.getElementById('foobar').innerHTML =
-      	now.toDateString()+" "+now.toTimeString();
-    };
-	setInterval(showTime, 1000);
-</script>
-
 <script type="text/JavaScript">
 <!--
   function timedRefresh(timeoutPeriod) {
@@ -19,7 +10,6 @@
 
 <body onload="JavaScript:timedRefresh(5000);">
 
-<div id="foobar"></div><br>
 
 <p>Select room, <%= current_user.nickname %> </p>
 <%= button_to 'New Room', new_room_path,
