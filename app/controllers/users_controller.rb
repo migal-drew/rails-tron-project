@@ -51,16 +51,14 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
-    #@user.nickname = params[:user][:nickname]
-    #@user.email = params[:user][:email]
-    #@user.password = params[:user][:password]
     @user.wins = 0
     @user.battles = 0
     @user.score = 0
 
     if @user.save
-      redirect_to signin_path,
-        notice: 'You have been successfully signed up! Please sign in!'
+      sign_in(@user)
+      redirect_to current_user,
+        notice: 'You have been successfully signed up!'
     else
       render action: "new"
     end

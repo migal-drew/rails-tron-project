@@ -11,7 +11,7 @@
 <body onload="JavaScript:timedRefresh(5000);">
 
 
-<p>Select room, <%= current_user.nickname %> </p>
+<p>Select room, <%= current_user.nickname %>, or create new </p>
 <%= button_to 'New Room', new_room_path,
   class: "btn btn-default", :method => 'get' %>
 <br><br>

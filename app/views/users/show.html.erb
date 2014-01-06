@@ -1,11 +1,12 @@
 <p id="notice"><%= notice %></p>
 
-<h2> Welcome back, <%= @user.nickname %> </h2> <br>
+<h2> Welcome back, <%= @user.nickname %> </h2>
+<br>
+<%= link_to 'All players', users_path %> <br>
+<br>
 You played <%= @user.battles %> games <br>
 You won <%= @user.wins %> battles <br>
 
-<%= link_to 'Back', users_path %> <br>
-
 <br>
-
+<br>
 <%= link_to 'Rooms', rooms_path %>
